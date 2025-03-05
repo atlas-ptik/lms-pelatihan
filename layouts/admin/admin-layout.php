@@ -152,20 +152,7 @@ function adminHeader($title = "Admin - Atlas LMS", $description = "Panel Admin A
                     </div>
 
                     <div class="topbar-right">
-                        <div class="topbar-notification">
-                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                <i class="bi bi-bell"></i>
-                                <span class="badge">3</span>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <h6 class="dropdown-header">Notifikasi</h6>
-                                <a class="dropdown-item" href="#">Pengguna baru mendaftar</a>
-                                <a class="dropdown-item" href="#">Kursus baru ditambahkan</a>
-                                <a class="dropdown-item" href="#">Pendaftaran kursus baru</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Lihat semua notifikasi</a>
-                            </div>
-                        </div>
+
 
                         <div class="topbar-user-menu">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">

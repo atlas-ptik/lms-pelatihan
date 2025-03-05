@@ -193,6 +193,11 @@ function handleAdminRoutes($request)
             require BASE_PATH . '/views/admin/pengaturan/tampilan.php';
             break;
 
+        // Profil    
+        case '/admin/profil':
+            require BASE_PATH . '/views/admin/profil/index.php';
+            break;
+
         default:
             http_response_code(404);
             require BASE_PATH . '/views/errors/404.php';
