@@ -3,17 +3,25 @@
 
 function handleUserRoutes($request)
 {
-    // Pastikan pengguna sudah login untuk mengakses rute user
+    // Pengecualian khusus untuk halaman login
+    if ($request == '/user/login') {
+        require BASE_PATH . '/views/user/login.php';
+        return;
+    }
+
+    // Pastikan pengguna sudah login untuk mengakses rute user lainnya
     if (!isset($_SESSION['user'])) {
         // Simpan URL yang diminta untuk redirect setelah login
         $_SESSION['redirect_after_login'] = $request;
-        header('Location: ' . BASE_URL . '/admin/login');
+        header('Location: ' . BASE_URL . '/user/login');
         exit;
     }
 
     switch ($request) {
         case '/user':
         case '/user/':
+            require BASE_PATH . '/views/user/dashboard.php';
+            break;
         case '/user/dashboard':
             require BASE_PATH . '/views/user/dashboard.php';
             break;

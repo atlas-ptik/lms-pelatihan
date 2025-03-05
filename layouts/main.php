@@ -7,7 +7,7 @@ function mainHeader($title = "Atlas LMS", $description = "Sistem Manajemen Pembe
 {
     startHTML($title, $description);
     $baseUrl = BASE_URL;
-    $loginUrl = $baseUrl . '/login';
+    $loginUrl = $baseUrl . '/user/login';
     $homeUrl = $baseUrl . '/';
     $kursusUrl = $baseUrl . '/kursus';
     $tentangUrl = $baseUrl . '/tentang';
