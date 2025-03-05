@@ -5,73 +5,135 @@ require_once BASE_PATH . '/layouts/parent.php';
 
 function userLayout($title, $content, $activeMenu = '')
 {
+    if (!isset($_SESSION['user'])) {
+        header('Location: ' . BASE_URL . '/user/login');
+        exit;
+    }
+
     $baseUrl = BASE_URL;
+    $user = $_SESSION['user'];
 
     startHTML($title, "Atlas LMS - Sistem Manajemen Pembelajaran");
 ?>
-
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="<?= $baseUrl ?>">
-                <img src="<?= $baseUrl ?>/assets/img/logo.png" alt="Atlas LMS" height="40">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link <?= ($activeMenu == 'dashboard') ? 'active' : '' ?>" href="<?= $baseUrl ?>/user/dashboard">
-                            <i class="bi bi-speedometer2"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <?= ($activeMenu == 'kursus') ? 'active' : '' ?>" href="<?= $baseUrl ?>/user/kursus">
-                            <i class="bi bi-book"></i> Kursus Saya
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <?= ($activeMenu == 'profil') ? 'active' : '' ?>" href="<?= $baseUrl ?>/user/profil">
-                            <i class="bi bi-person"></i> Profil
-                        </a>
-                    </li>
-                </ul>
-                <div class="d-flex">
-                    <div class="dropdown">
-                        <a class="btn btn-outline-primary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle"></i> <?= htmlspecialchars($_SESSION['user']['nama_lengkap'] ?? 'Pengguna') ?>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="<?= $baseUrl ?>/user/profil"><i class="bi bi-person"></i> Profil</a></li>
-                            <li><a class="dropdown-item" href="<?= $baseUrl ?>/user/profil/password"><i class="bi bi-key"></i> Ubah Password</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="<?= $baseUrl ?>/logout"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
-                        </ul>
-                    </div>
-                </div>
+    <div class="wrapper">
+        <!-- Main Content -->
+        <div class="content-area pb-5">
+            <div class="container py-3">
+                <?= $content ?>
             </div>
         </div>
-    </nav>
 
-    <main class="container py-4">
-        <?= $content ?>
-    </main>
+        <!-- Bottom Navbar -->
+        <nav class="navbar fixed-bottom navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="<?= $baseUrl ?>/user/dashboard">
+                    <img src="<?= $baseUrl ?>/assets/img/logo.png" alt="Atlas LMS" height="30" class="d-inline-block align-text-top">
+                </a>
 
-    <footer class="footer mt-auto">
-        <div class="container py-3">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>Atlas LMS</h5>
-                    <p>Sistem Manajemen Pembelajaran berbasis PHP</p>
+                <div class="d-flex align-items-center">
+                    <a class="nav-link px-3 <?= ($activeMenu == 'dashboard') ? 'text-primary' : 'text-white' ?>" href="<?= $baseUrl ?>/user/dashboard">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+
+                    <a class="nav-link px-3 <?= ($activeMenu == 'kursus') ? 'text-primary' : 'text-white' ?>" href="<?= $baseUrl ?>/user/kursus">
+                        <i class="bi bi-book"></i> Kursus Saya
+                    </a>
+
+                    <a class="nav-link px-3 <?= ($activeMenu == 'sertifikat') ? 'text-primary' : 'text-white' ?>" href="<?= $baseUrl ?>/user/sertifikat">
+                        <i class="bi bi-award"></i> Sertifikat
+                    </a>
+
+                    <a class="nav-link px-3 <?= ($activeMenu == 'profil') ? 'text-primary' : 'text-white' ?>" href="<?= $baseUrl ?>/user/profil">
+                        <i class="bi bi-person"></i> Profil
+                    </a>
                 </div>
-                <div class="col-md-6 text-md-end">
-                    <p>&copy; <?= date('Y') ?> Atlas Team. All rights reserved.</p>
+
+                <div class="dropdown dropup">
+                    <a class="btn btn-dark dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <?php if (!empty($user['foto_profil'])): ?>
+                            <img src="<?= $baseUrl ?>/uploads/profil/<?= $user['foto_profil'] ?>"
+                                alt="<?= htmlspecialchars($user['nama_lengkap']) ?>" class="rounded-circle"
+                                width="24" height="24" style="object-fit: cover;">
+                        <?php else: ?>
+                            <i class="bi bi-person-circle"></i>
+                        <?php endif; ?>
+                        <?= htmlspecialchars($user['nama_lengkap'] ?? 'Pengguna') ?>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="<?= $baseUrl ?>/user/profil"><i class="bi bi-person me-2"></i>Profil</a></li>
+                        <li><a class="dropdown-item" href="<?= $baseUrl ?>/user/profil/password"><i class="bi bi-key me-2"></i>Ubah Password</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="<?= $baseUrl ?>/logout"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                    </ul>
                 </div>
             </div>
-        </div>
-    </footer>
+        </nav>
+    </div>
+
+    <style>
+        body {
+            padding-bottom: 56px;
+            background-color: #f5f5f5;
+        }
+
+        .wrapper {
+            min-height: calc(100vh - 56px);
+        }
+
+        .content-area {
+            min-height: calc(100vh - 56px);
+        }
+
+        .btn-primary,
+        .bg-primary,
+        .text-primary {
+            background-color: #39ff14 !important;
+            border-color: #39ff14 !important;
+            color: #212529 !important;
+        }
+
+        .btn-outline-primary {
+            border-color: #39ff14 !important;
+            color: #39ff14 !important;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #39ff14 !important;
+            color: #212529 !important;
+        }
+
+        .navbar {
+            padding: 0.5rem 1rem;
+        }
+
+        .navbar .nav-link i {
+            font-size: 1.25rem;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: none;
+            margin-bottom: 20px;
+        }
+
+        .dropdown-menu {
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+
+        .dropdown-item {
+            padding: 0.5rem 1.5rem;
+        }
+
+        .dropdown-item:active {
+            background-color: #39ff14;
+            color: #212529;
+        }
+    </style>
 <?php
     endHTML();
 }

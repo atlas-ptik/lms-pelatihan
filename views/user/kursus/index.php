@@ -32,94 +32,106 @@ $stmt = $db->prepare("
 $stmt->execute([':user_id' => $userId]);
 $kursus = $stmt->fetchAll();
 
-$content = function () use ($kursus, $status) {
-    $baseUrl = BASE_URL;
-?>
-    <div class="d-sm-flex justify-content-between align-items-center mb-4">
-        <h3 class="mb-3 mb-sm-0">Kursus Saya</h3>
-        <a href="<?= $baseUrl ?>/kursus" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i> Jelajahi Kursus Baru
-        </a>
+$content = '
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>Kursus Saya</h3>
+    <a href="' . BASE_URL . '/kursus" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Jelajahi Kursus</a>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body p-0">
+        <ul class="nav nav-pills nav-fill px-3 py-2">
+            <li class="nav-item">
+                <a class="nav-link ' . ($status === 'semua' ? 'active bg-primary' : '') . '" href="' . BASE_URL . '/user/kursus">Semua</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link ' . ($status === 'aktif' ? 'active bg-primary' : '') . '" href="' . BASE_URL . '/user/kursus?status=aktif">Aktif</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link ' . ($status === 'selesai' ? 'active bg-primary' : '') . '" href="' . BASE_URL . '/user/kursus?status=selesai">Selesai</a>
+            </li>
+        </ul>
     </div>
+</div>';
 
-    <div class="card mb-4">
-        <div class="card-header bg-light">
-            <ul class="nav nav-pills nav-sm card-header-pills">
-                <li class="nav-item">
-                    <a class="nav-link <?= $status === 'semua' ? 'active' : '' ?>" href="<?= $baseUrl ?>/user/kursus">Semua</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link <?= $status === 'aktif' ? 'active' : '' ?>" href="<?= $baseUrl ?>/user/kursus?status=aktif">Aktif</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link <?= $status === 'selesai' ? 'active' : '' ?>" href="<?= $baseUrl ?>/user/kursus?status=selesai">Selesai</a>
-                </li>
-            </ul>
-        </div>
-        <div class="card-body">
-            <?php if (count($kursus) > 0): ?>
-                <div class="row">
-                    <?php foreach ($kursus as $item): ?>
-                        <div class="col-md-6 col-lg-4 mb-4">
-                            <div class="card h-100 course-card">
-                                <?php if ($item['gambar_sampul']): ?>
-                                    <img src="<?= $baseUrl ?>/assets/img/kursus/<?= $item['gambar_sampul'] ?>"
-                                        class="card-img-top course-thumbnail" alt="<?= htmlspecialchars($item['judul']) ?>">
-                                <?php else: ?>
-                                    <div class="bg-secondary course-thumbnail d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-book display-4 text-white"></i>
-                                    </div>
-                                <?php endif; ?>
+if (count($kursus) > 0) {
+    $content .= '<div class="row">';
 
-                                <span class="badge <?= $item['status'] === 'aktif' ? 'bg-primary' : 'bg-success' ?>">
-                                    <?= ucfirst($item['status']) ?>
-                                </span>
+    foreach ($kursus as $item) {
+        $content .= '
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="position-relative">';
 
-                                <div class="card-body">
-                                    <h5 class="card-title"><?= htmlspecialchars($item['judul']) ?></h5>
-                                    <p class="text-muted small">
-                                        <i class="bi bi-bar-chart-fill"></i> <?= ucfirst($item['level']) ?>
-                                        &bull; <i class="bi bi-book"></i> <?= $item['total_materi'] ?> materi
-                                    </p>
-                                    <div class="progress mb-3">
-                                        <div class="progress-bar" role="progressbar" style="width: <?= $item['progres_persen'] ?>%;"
-                                            aria-valuenow="<?= $item['progres_persen'] ?>" aria-valuemin="0" aria-valuemax="100">
-                                            <?= $item['progres_persen'] ?>%
-                                        </div>
-                                    </div>
-                                    <div class="d-grid gap-2">
-                                        <a href="<?= $baseUrl ?>/user/kursus/detail?id=<?= $item['id'] ?>" class="btn btn-sm btn-outline-primary">
-                                            <i class="bi bi-info-circle"></i> Detail
-                                        </a>
-                                        <?php if ($item['status'] === 'aktif'): ?>
-                                            <a href="<?= $baseUrl ?>/user/belajar?id=<?= $item['id'] ?>" class="btn btn-sm btn-primary">
-                                                <i class="bi bi-play-fill"></i> Lanjut Belajar
-                                            </a>
-                                        <?php else: ?>
-                                            <a href="<?= $baseUrl ?>/user/sertifikat?pendaftaran_id=<?= $item['id'] ?>" class="btn btn-sm btn-success">
-                                                <i class="bi bi-award"></i> Lihat Sertifikat
-                                            </a>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                                <div class="card-footer text-muted small">
-                                    <i class="bi bi-calendar"></i> Terdaftar: <?= date('d M Y', strtotime($item['tanggal_daftar'])) ?>
-                                </div>
-                            </div>
+        if ($item['gambar_sampul']) {
+            $content .= '<img src="' . BASE_URL . '/assets/img/kursus/' . $item['gambar_sampul'] . '" 
+                     class="card-img-top" style="height: 160px; object-fit: cover;" 
+                     alt="' . htmlspecialchars($item['judul']) . '">';
+        } else {
+            $content .= '<div class="bg-secondary d-flex align-items-center justify-content-center" 
+                     style="height: 160px;">
+                    <i class="bi bi-book display-4 text-white"></i>
+                </div>';
+        }
+
+        $content .= '
+                    <span class="position-absolute top-0 end-0 badge ' . ($item['status'] === 'aktif' ? 'bg-primary' : 'bg-success') . ' m-2">
+                        ' . ucfirst($item['status']) . '
+                    </span>
+                </div>
+                
+                <div class="card-body">
+                    <h5 class="card-title">' . htmlspecialchars($item['judul']) . '</h5>
+                    <p class="text-muted small">
+                        <i class="bi bi-bar-chart-fill"></i> ' . ucfirst($item['level']) . '
+                        &bull; <i class="bi bi-book"></i> ' . $item['total_materi'] . ' materi
+                    </p>
+                    <div class="progress mb-3">
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: ' . $item['progres_persen'] . '%;" 
+                             aria-valuenow="' . $item['progres_persen'] . '" aria-valuemin="0" aria-valuemax="100">
+                            ' . $item['progres_persen'] . '%
                         </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php else: ?>
-                <div class="text-center py-5">
-                    <div class="display-6 text-muted mb-3"><i class="bi bi-journal-x"></i></div>
-                    <h4>Tidak ada kursus</h4>
-                    <p>Anda belum mengikuti kursus apapun</p>
-                    <a href="<?= $baseUrl ?>/kursus" class="btn btn-primary">Jelajahi Kursus</a>
-                </div>
-            <?php endif; ?>
-        </div>
-    </div>
-<?php
-};
+                    </div>
+                    <div class="d-grid gap-2">
+                        <a href="' . BASE_URL . '/user/kursus/detail?id=' . $item['id'] . '" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-info-circle"></i> Detail
+                        </a>';
 
-userLayout('Kursus Saya', $content(), 'kursus');
+        if ($item['status'] === 'aktif') {
+            $content .= '
+                        <a href="' . BASE_URL . '/user/belajar?id=' . $item['id'] . '" class="btn btn-sm btn-primary">
+                            <i class="bi bi-play-fill"></i> Lanjut Belajar
+                        </a>';
+        } else {
+            $content .= '
+                        <a href="' . BASE_URL . '/user/sertifikat?pendaftaran_id=' . $item['id'] . '" class="btn btn-sm btn-success">
+                            <i class="bi bi-award"></i> Lihat Sertifikat
+                        </a>';
+        }
+
+        $content .= '
+                    </div>
+                </div>
+                <div class="card-footer text-muted small">
+                    <i class="bi bi-calendar"></i> Terdaftar: ' . date('d M Y', strtotime($item['tanggal_daftar'])) . '
+                </div>
+            </div>
+        </div>';
+    }
+
+    $content .= '</div>';
+} else {
+    $content .= '
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <div class="mb-3">
+                <i class="bi bi-journal-x text-muted" style="font-size: 4rem;"></i>
+            </div>
+            <h4>Tidak ada kursus</h4>
+            <p>Anda belum mengikuti kursus apapun</p>
+            <a href="' . BASE_URL . '/kursus" class="btn btn-primary">Jelajahi Kursus</a>
+        </div>
+    </div>';
+}
+
+userLayout('Kursus Saya', $content, 'kursus');

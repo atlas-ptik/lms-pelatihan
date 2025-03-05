@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $foto_profil = '';
 
                 if (!empty($_FILES['foto_profil']['name'])) {
-                    $upload_dir = BASE_PATH . '/assets/img/profile/';
+                    $upload_dir = BASE_PATH . '/uploads/profil/';
                     if (!is_dir($upload_dir)) {
                         mkdir($upload_dir, 0755, true);
                     }
@@ -104,83 +104,84 @@ $stmt = $db->prepare("SELECT * FROM pengguna WHERE id = :id");
 $stmt->execute([':id' => $userId]);
 $user = $stmt->fetch();
 
-$content = function () use ($user, $success, $error) {
-    $baseUrl = BASE_URL;
-?>
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Edit Profil</h5>
-                    <a href="<?= $baseUrl ?>/user/profil" class="btn btn-sm btn-outline-primary">
-                        <i class="bi bi-arrow-left"></i> Kembali
-                    </a>
+$content = '
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>Edit Profil</h3>
+    <a href="' . BASE_URL . '/user/profil" class="btn btn-outline-primary"><i class="bi bi-arrow-left"></i> Kembali</a>
+</div>';
+
+if ($success) {
+    $content .= '
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <i class="bi bi-check-circle-fill me-2"></i>Profil berhasil diperbarui!
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>';
+}
+
+if ($error) {
+    $content .= '
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>' . $error . '
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>';
+}
+
+$content .= '
+<div class="card">
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            <div class="mb-4 text-center">
+                <div class="mb-3">';
+
+if ($user['foto_profil']) {
+    $content .= '<img src="' . BASE_URL . '/uploads/profil/' . $user['foto_profil'] . '" alt="Foto Profil" 
+                 class="rounded-circle img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">';
+} else {
+    $content .= '<div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto" 
+                 style="width: 150px; height: 150px;">
+                <span class="display-4 text-white">' . strtoupper(substr($user['nama_lengkap'], 0, 1)) . '</span>
+            </div>';
+}
+
+$content .= '
                 </div>
-                <div class="card-body">
-                    <?php if ($success): ?>
-                        <div class="alert alert-success">
-                            Profil berhasil diperbarui!
-                        </div>
-                    <?php endif; ?>
-
-                    <?php if ($error): ?>
-                        <div class="alert alert-danger">
-                            <?= $error ?>
-                        </div>
-                    <?php endif; ?>
-
-                    <form method="post" enctype="multipart/form-data">
-                        <div class="mb-3 text-center">
-                            <?php if ($user['foto_profil']): ?>
-                                <img src="<?= $baseUrl ?>/assets/img/profile/<?= $user['foto_profil'] ?>" alt="Foto Profil"
-                                    class="rounded-circle img-thumbnail mb-3" style="width: 150px; height: 150px; object-fit: cover;">
-                            <?php else: ?>
-                                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto mb-3"
-                                    style="width: 150px; height: 150px;">
-                                    <span class="display-4 text-white"><?= strtoupper(substr($user['nama_lengkap'], 0, 1)) ?></span>
-                                </div>
-                            <?php endif; ?>
-
-                            <div class="mb-3">
-                                <label for="foto_profil" class="form-label">Foto Profil</label>
-                                <input type="file" class="form-control" id="foto_profil" name="foto_profil">
-                                <small class="text-muted">Unggah gambar baru untuk mengubah foto profil (JPG, JPEG, PNG, GIF)</small>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="nama_lengkap" class="form-label">Nama Lengkap</label>
-                            <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap"
-                                value="<?= htmlspecialchars($user['nama_lengkap']) ?>" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email"
-                                value="<?= htmlspecialchars($user['email']) ?>" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="nomor_telepon" class="form-label">Nomor Telepon</label>
-                            <input type="text" class="form-control" id="nomor_telepon" name="nomor_telepon"
-                                value="<?= htmlspecialchars($user['nomor_telepon'] ?? '') ?>">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="bio" class="form-label">Bio</label>
-                            <textarea class="form-control" id="bio" name="bio" rows="5"><?= htmlspecialchars($user['bio'] ?? '') ?></textarea>
-                            <small class="text-muted">Ceritakan sedikit tentang diri Anda</small>
-                        </div>
-
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                        </div>
-                    </form>
+                <div class="mb-3">
+                    <label for="foto_profil" class="form-label">Foto Profil</label>
+                    <input type="file" class="form-control" id="foto_profil" name="foto_profil">
+                    <div class="form-text">Unggah gambar (JPG, JPEG, PNG, GIF)</div>
                 </div>
             </div>
-        </div>
+            
+            <div class="mb-3">
+                <label for="nama_lengkap" class="form-label">Nama Lengkap</label>
+                <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" 
+                       value="' . htmlspecialchars($user['nama_lengkap']) . '" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" 
+                       value="' . htmlspecialchars($user['email']) . '" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="nomor_telepon" class="form-label">Nomor Telepon</label>
+                <input type="text" class="form-control" id="nomor_telepon" name="nomor_telepon" 
+                       value="' . htmlspecialchars($user['nomor_telepon'] ?? '') . '">
+            </div>
+            
+            <div class="mb-3">
+                <label for="bio" class="form-label">Bio</label>
+                <textarea class="form-control" id="bio" name="bio" rows="4">' . htmlspecialchars($user['bio'] ?? '') . '</textarea>
+                <div class="form-text">Ceritakan sedikit tentang diri Anda</div>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="' . BASE_URL . '/user/profil" class="btn btn-outline-secondary">Batal</a>
+                <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+            </div>
+        </form>
     </div>
-<?php
-};
+</div>';
 
-userLayout('Edit Profil', $content(), 'profil');
+userLayout('Edit Profil', $content, 'profil');
