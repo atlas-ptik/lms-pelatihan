@@ -244,9 +244,15 @@ mainHeader($kursus['judul'], substr(strip_tags($kursus['deskripsi']), 0, 160));
                             <?php endif; ?>
                         </h4>
 
-                        <a href="<?= BASE_URL ?>/admin/login" class="btn btn-primary btn-lg w-100 mb-3">
-                            <i class="bi bi-journal-plus me-2"></i> Daftar Kursus
-                        </a>
+                        <?php if (isset($_SESSION['user'])): ?>
+                            <a href="<?= BASE_URL ?>/user/kursus/daftar?id=<?= $kursus['id'] ?>" class="btn btn-primary btn-lg w-100 mb-3">
+                                <i class="bi bi-journal-plus me-2"></i> Daftar Kursus
+                            </a>
+                        <?php else: ?>
+                            <a href="<?= BASE_URL ?>/user/login" class="btn btn-primary btn-lg w-100 mb-3">
+                                <i class="bi bi-journal-plus me-2"></i> Masuk untuk Daftar
+                            </a>
+                        <?php endif; ?>
 
                         <hr>
 

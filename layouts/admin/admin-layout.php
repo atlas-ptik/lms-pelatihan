@@ -1,6 +1,6 @@
 <?php
 // Path: layouts/admin/admin-layout.php
-
+ob_start();
 require_once BASE_PATH . '/layouts/parent.php';
 
 function adminHeader($title = "Admin - Atlas LMS", $description = "Panel Admin Atlas LMS")
@@ -258,6 +258,7 @@ function adminHeader($title = "Admin - Atlas LMS", $description = "Panel Admin A
             });
         });
     </script>
+    ob_end_flush();
 <?php
             endHTML();
         }

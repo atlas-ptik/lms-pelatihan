@@ -12,6 +12,7 @@ function mainHeader($title = "Atlas LMS", $description = "Sistem Manajemen Pembe
     $kursusUrl = $baseUrl . '/kursus';
     $tentangUrl = $baseUrl . '/tentang';
 
+    // Header dengan heredoc yang benar
     echo <<<HTML
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
@@ -43,7 +44,31 @@ function mainHeader($title = "Atlas LMS", $description = "Sistem Manajemen Pembe
                     </div>
                 </form>
                 <div class="d-flex">
+HTML;
+
+    // Tampilkan menu dropdown jika user sudah login
+    if (isset($_SESSION['user'])) {
+        echo <<<HTML
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle me-1"></i> {$_SESSION['user']['nama_lengkap']}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="{$baseUrl}/user/dashboard"><i class="bi bi-speedometer2 me-2"></i> Dashboard</a></li>
+                            <li><a class="dropdown-item" href="{$baseUrl}/user/profil"><i class="bi bi-person me-2"></i> Profil</a></li>
+                            <li><a class="dropdown-item" href="{$baseUrl}/user/kursus"><i class="bi bi-journal-text me-2"></i> Kursus Saya</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{$baseUrl}/logout"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+                        </ul>
+                    </div>
+HTML;
+    } else {
+        echo <<<HTML
                     <a href="{$loginUrl}" class="btn btn-primary">Masuk</a>
+HTML;
+    }
+
+    echo <<<HTML
                 </div>
             </div>
         </div>
