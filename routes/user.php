@@ -103,23 +103,6 @@ function handleUserRoutes($request)
             require BASE_PATH . '/views/user/sertifikat/detail.php';
             break;
 
-        // Instruktur khusus (jika user adalah instruktur)
-        case '/user/instruktur/kursus':
-            require BASE_PATH . '/views/user/instruktur/kursus/index.php';
-            break;
-        case '/user/instruktur/kursus/tambah':
-            require BASE_PATH . '/views/user/instruktur/kursus/tambah.php';
-            break;
-        case '/user/instruktur/kursus/edit':
-            require BASE_PATH . '/views/user/instruktur/kursus/edit.php';
-            break;
-        case '/user/instruktur/peserta':
-            require BASE_PATH . '/views/user/instruktur/peserta/index.php';
-            break;
-        case '/user/instruktur/tugas/nilai':
-            require BASE_PATH . '/views/user/instruktur/tugas/nilai.php';
-            break;
-
         default:
             http_response_code(404);
             require BASE_PATH . '/views/errors/404.php';
