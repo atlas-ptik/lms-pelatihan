@@ -64,7 +64,7 @@ if (count($kursus) > 0) {
                 <div class="position-relative">';
 
         if ($item['gambar_sampul']) {
-            $content .= '<img src="' . BASE_URL . '/assets/img/kursus/' . $item['gambar_sampul'] . '" 
+            $content .= '<img src="' . BASE_URL . '/uploads/kursus/' . $item['gambar_sampul'] . '" 
                      class="card-img-top" style="height: 160px; object-fit: cover;" 
                      alt="' . htmlspecialchars($item['judul']) . '">';
         } else {

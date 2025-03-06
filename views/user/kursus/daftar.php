@@ -121,7 +121,7 @@ if ($success) {
                 <div class="mb-3">';
 
     if ($kursus['gambar_sampul']) {
-        $content .= '<img src="' . BASE_URL . '/assets/img/kursus/' . $kursus['gambar_sampul'] . '" 
+        $content .= '<img src="' . BASE_URL . '/uploads/kursus/' . $kursus['gambar_sampul'] . '" 
                      class="img-fluid rounded" alt="' . htmlspecialchars($kursus['judul']) . '">';
     } else {
         $content .= '<div class="bg-secondary rounded d-flex align-items-center justify-content-center" style="height: 200px;">
