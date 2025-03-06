@@ -140,15 +140,8 @@ function adminHeader($title = "Admin - Atlas LMS", $description = "Panel Admin A
                         <i class="bi bi-list"></i>
                     </button>
 
-                    <div class="topbar-search d-none d-md-block">
-                        <form action="#">
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-0">
-                                    <i class="bi bi-search"></i>
-                                </span>
-                                <input type="search" class="form-control bg-light border-0" placeholder="Cari...">
-                            </div>
-                        </form>
+                    <div class="d-none d-md-block">
+                        <h3>Welcome</h3>
                     </div>
 
                     <div class="topbar-right">
@@ -196,7 +189,7 @@ function adminHeader($title = "Admin - Atlas LMS", $description = "Panel Admin A
 
             <!-- Footer -->
             <footer class="footer">
-                <div class="container-fluid">
+                <div class="container">
                     <div class="footer-content">
                         <p>&copy; <?= $year ?> Atlas LMS Admin. Hak Cipta Dilindungi.</p>
                     </div>
@@ -258,7 +251,7 @@ function adminHeader($title = "Admin - Atlas LMS", $description = "Panel Admin A
             });
         });
     </script>
-    ob_end_flush();
 <?php
+            ob_end_flush();
             endHTML();
         }

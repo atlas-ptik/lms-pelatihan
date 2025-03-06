@@ -35,14 +35,6 @@ function mainHeader($title = "Atlas LMS", $description = "Sistem Manajemen Pembe
                         <a class="nav-link" href="{$tentangUrl}">Tentang</a>
                     </li>
                 </ul>
-                <form class="d-flex me-2" action="{$baseUrl}/kursus" method="GET">
-                    <div class="input-group">
-                        <input class="form-control" type="search" name="q" placeholder="Cari kursus..." aria-label="Cari">
-                        <button class="btn btn-outline-light" type="submit">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                </form>
                 <div class="d-flex">
 HTML;
 
